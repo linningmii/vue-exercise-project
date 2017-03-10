@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tablet</title>
+</head>
+<body>
+<main id="app">
+  <input type="text" placeholder="搜索" v-model="searchText">
+  <tablet
+      :grid-header="header"
+      :data="data"
+      :search-text="searchText"
+  ></tablet>
+</main>
+</body>
+<script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>
+<script type="text/x-template" id="tablet-template">
+  <table>
+    <thead>
+    <tr>
+      <th v-for="content in gridHeader">{{content}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr v-for="row in gridData">
+      <td v-if="row.label">{{row.label}}</td>
+      <td v-for="content in row.data">{{content}}</td>
+    </tr>
+    </tbody>
+  </table>
+</script>
+<script type="text/javascript">
+  Vue.component('tablet', {
+    template: '#tablet-template',
+    props: {
+      gridHeader: Array,
+      data: Array,
+      searchText: String
+    },
+    watch: {
+      searchText: function (val) {
+        if (!val) {
+          this.gridData = this.data;
+        } else {
+          this.gridData = this.data.filter(ele => ~((ele.label || '') + ele.data.join('')).indexOf(this.searchText));
+        }
+      }
+    },
+    data () {
+      return {
+        gridData: this.data
+      };
+    }
+  });
+
+  new Vue({
+    el: '#app',
+    data: {
+      header: ['name', 'content'],
+      data: [{
+        label: '发财',
+        data: [
+          '发',
+          '财',
+          '哈哈'
+        ],
+      }, {
+        label: '顶你个肺',
+        data: [
+          '顶',
+          '你',
+          '个',
+          '肺',
+          '锤大王'
+        ]
+      }],
+      searchText: ''
+    },
+    methods: {
+      test () {
+        console.log('fuck');
+      }
+    }
+  });
+</script>
+</html>

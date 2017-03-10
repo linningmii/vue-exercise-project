@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tree</title>
+  <style>
+  </style>
+</head>
+<body>
+<main id="app">
+  <div>Double click the stuff to turn it into a folder</div>
+  <tree
+      group-name="Top"
+      :list="top"
+  ></tree>
+</main>
+</body>
+<script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>
+<script type="text/x-template" id="tree-template">
+  <div>
+    <div>{{groupName}}
+      <button @click="toggle">[{{toggleState}}]</button>
+    </div>
+    <ul v-show="!collapse">
+      <li v-for="item in list">{{item}}</li>
+      <li> <button @click="addNew"> + </button> </li>
+    </ul>
+  </div>
+</script>
+<script type="text/javascript">
+  Vue.component('tree', {
+    template: '#tree-template',
+    props: {
+      groupName: String,
+      list: Array
+    },
+    data () {
+      return {
+        collapse: true
+      };
+    },
+    computed: {
+      toggleState () {
+        return this.collapse ? '+' : '-';
+      }
+    },
+    methods: {
+      toggle () {
+        this.collapse = !this.collapse;
+      },
+
+      addNew () {
+        this.list.push('new stuff');
+      },
+
+      changeType () {}
+    }
+  });
+  new Vue({
+    el: '#app',
+    data () {
+      return {
+        top: ['fuck', 'jack']
+      }
+    }
+  });
+</script>
+</html>

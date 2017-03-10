@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Get-Github-Branch</title>
+  <style>
+    .label {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<main id="app">
+  <template v-for="branch in branches">
+    <label class="label">
+      <input type="radio" name="branch" v-model="currentBranch" :value="branch" @change="getData">
+      {{branch}}
+    </label>
+  </template>
+  <h3>
+    Vue/Vue.js: {{currentBranch}}
+  </h3>
+  <ul>
+    <li v-for="commit in commits">
+      {{commit.sha | get07}}
+    </li>
+  </ul>
+</main>
+</body>
+<script type="text/javascript" src="../node_modules/vue/dist/vue.js"></script>
+<script type="text/javascript">
+  const apiURL = 'https://api.github.com/repos/vuejs/vue/commits?per_page=3&sha=';
+
+  new Vue({
+    el: '#app',
+    data: {
+      branches: [
+        'master', 'dev'
+      ],
+      currentBranch: 'master',
+      commits: []
+    },
+    created () {
+      this.getData();
+    },
+    filters: {
+      get07 (input) {
+        return input.slice(0, 7);
+      }
+    },
+    methods: {
+      getData () {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', apiURL + this.currentBranch);
+        xhr.onload = () => {
+          this.commits = JSON.parse(xhr.responseText);
+          console.log(this.commits);
+        };
+        xhr.send();
+      }
+    }
+  })
+</script>
+</html>
